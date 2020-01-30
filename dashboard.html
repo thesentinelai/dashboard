@@ -107,29 +107,29 @@
       <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
       <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
       <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
-        <!-- Turn all file input elements into ponds -->
-        <script>
-        FilePond.registerPlugin(FilePondPluginFileValidateSize);
-        FilePond.registerPlugin(FilePondPluginFileEncode);
-        FilePond.setOptions({
-            server: {
-                url: 'http://127.0.0.1:5000/',
-                process: {
-                    url: 'upload',
-                    method: 'POST',
-                    withCredentials: false,
-                    timeout: 7000,
-                    onload: null,
-                    onerror: null,
-                    ondata: null
-                }
-            }
-        });
-        const pond = FilePond.create( document.getElementById("filepond"), {
-            maxFiles: 1,
-            maxFileSize :'20MB'
-        });
 
-        </script>
+      <script>
+      FilePond.registerPlugin(FilePondPluginFileValidateSize);
+      FilePond.registerPlugin(FilePondPluginFileEncode);
+      FilePond.setOptions({
+          server: {
+              url: 'http://127.0.0.1:5000/',
+              process: {
+                  url: 'upload',
+                  method: 'POST',
+                  withCredentials: false,
+                  timeout: 7000,
+                  onload: null,
+                  onerror: null,
+                  ondata: null
+              }
+          }
+      });
+      const pond = FilePond.create( document.getElementById("filepond"), {
+          maxFiles: 1,
+          maxFileSize :'20MB'
+      });
+
+      </script>
     </body>
   </html>
