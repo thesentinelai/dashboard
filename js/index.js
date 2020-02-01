@@ -38,25 +38,3 @@ window.addEventListener('load', async () => {
         alert("Get Web3 Compatible");
     }
 });
-
-function init(){}
-
-async function signin(){
-
-    const url = ENDPOINT + "/signin";
-    const data = "{\"seed_sentence\":\""+document.getElementById("seedwords").value+"\"}";
-    var xhr = new XMLHttpRequest();
-    xhr.open("POST", url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    xhr.onreadystatechange = function(e) {
-       if (xhr['status'] == 201){
-           console.log(xhr);
-            localStorage.setItem('userAddress', JSON.parse(xhr['responseText'])['public_key']);
-            localStorage.setItem('userSeed', document.getElementById("seedwords").value);
-            window.location = "/apps-myapps.html";
-       }
-    }
-    xhr.send(data);
-
-}

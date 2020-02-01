@@ -192,3 +192,6 @@ const contractABI=[
 	}
 ];
 const contractAddress = "0xdFF74cBcD63811C050A6a2545E62bF7960C55671";
+
+const COORDINATOR_NODE = "http://127.0.0.1:5000/";
+const upload_ep = "first-run"

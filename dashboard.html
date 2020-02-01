@@ -79,9 +79,9 @@
                         <div class="title title-2">Just drop your model here.</div>
                         <div class="text">You can download a <i>number detection model</i> (MNIST) <a class="link" href="model2.h5">here</a> to test it out.</div>
 
-                        <form action="http://127.0.0.1:5000/upload" method="post" enctype="multipart/form-data" >
+                        <form onsubmit="modelhandle()" id="modelSubmit">
                             <input type="file" name="file" class="filepond" id="filepond">
-                            <button class="btn btn-primary" >Start Learning</button>
+                            <button class="btn btn-primary" id="submit" >Start Learning</button>
                         </form>
 
                       </div>
@@ -120,6 +120,7 @@
       <script src="js/lib/bootstrap.min.js"></script>
       <script src="js/sentinel.js"></script>
       <script src="js/globals.js"></script>
+      <script src="js/dashboard.js"></script>
       <script src="js/index.js"></script>
 
       <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
@@ -131,14 +132,16 @@
       FilePond.registerPlugin(FilePondPluginFileEncode);
       FilePond.setOptions({
           server: {
-              url: 'http://127.0.0.1:5000/',
+              url: COORDINATOR_NODE,
               process: {
-                  url: 'first-run',
+                  url: upload_ep,
                   method: 'POST',
                   withCredentials: false,
                   timeout: 7000,
                   onload: null,
-                  onerror: null,
+                  onerror: (error) => {
+                    alert(error);
+                  },
                   ondata: null
               }
           }
