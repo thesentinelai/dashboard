@@ -3,6 +3,7 @@ async function init() {
     form.addEventListener( "submit", function ( event ) {
         modelhandle(event);
     } );
+    await refreshUI();
 }
 
 async function refreshUI(){

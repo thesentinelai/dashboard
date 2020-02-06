@@ -4,27 +4,14 @@ async function init() {
 }
 
 async function refreshUI(){
-    let hashsElement = document.getElementById("hashs");
+
     let urldata = getQueryParams();
     if ('taskID' in urldata){
         let taskDetails = await getTaskDetails(urldata['taskID']);
         document.getElementById('modelCost').innerText = taskDetails['cost'] + " ETH";
         document.getElementById('roundDetails').innerText = taskDetails['currentRound'] + "/" + taskDetails['totalRounds'];
-        let taskHashs = await getTaskHashs(urldata['taskID']);
-
-        let i=0;
-        for(i=0;i<taskDetails['currentRound'];i++) {
-            console.log(i);
-            hashsElement.innerHTML += `<a href='https://cloudflare-ipfs.com/ipfs/${taskHashs[i]}' class='vacancy-item'> \
-                    <div class='vacancy-title'>Model ${i+1}</div> \
-                    <div class='vacancy-text'>${taskHashs[i]}</div> \
-                    <div class='vacancy-arrow'> \
-                    <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
-                        <polygon points='0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12'></polygon> \
-                    </svg> \
-                    </div> \
-                </a>`;
-        }
+        // console.log(urldata['taskID']);
+        await getTaskHashes(parseInt(urldata['taskID']));
     }
 };
 
@@ -65,19 +52,43 @@ async function getTaskDetails(_taskId = 1) {
     return resultDict;
 }
 
-
-async function getTaskHashs(_taskId = 1) {
+async function getTaskHashes(_taskId = 1, _userAddress = web3.eth.accounts[0]) {
 
     let promise = new Promise((res, rej) => {
-        Sentinel.getTaskHashes(_taskId,function(error, result) {
-            if (!error)
-                res(result);
-            else{
-                rej(false);
-            }
-        });
 
+        let hashsElement = document.getElementById("hashs");
+        let i = 0;
+        let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 9312884, toBlock: 'latest'})
+        newTaskCreatedEvent.get(async (error, logs) => {
+            hashsElement.innerHTML += `<a href='https://cloudflare-ipfs.com/ipfs/${logs[0].args['_modelHash']}' class='vacancy-item'> \
+                    <div class='vacancy-title'>Model ${i+1}</div> \
+                    <div class='vacancy-text'>${trimhash(logs[0].args['_modelHash'])}</div> \
+                    <div class='vacancy-arrow'> \
+                    <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
+                        <polygon points='0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12'></polygon> \
+                    </svg> \
+                    </div> \
+                </a>`;
+        });
+        let modelUpdatedEvent = Sentinel.modelUpdated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 9312884, toBlock: 'latest'})
+        modelUpdatedEvent.get(async (error, logs) => {
+            i+=1;
+            logs.forEach(async function(log){
+                hashsElement.innerHTML += `<a href='https://cloudflare-ipfs.com/ipfs/${log.args['_modelHash']}' class='vacancy-item'> \
+                    <div class='vacancy-title'>Model ${i+1}</div> \
+                    <div class='vacancy-text'>${trimhash(log.args['_modelHash'])}</div> \
+                    <div class='vacancy-arrow'> \
+                    <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
+                        <polygon points='0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12'></polygon> \
+                    </svg> \
+                    </div> \
+                </a>`;
+            })
+        });
+        res(true);
     });
     let result = await promise;
-    return result.reverse();
+    return result;
 }
+
+

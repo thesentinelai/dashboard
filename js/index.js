@@ -51,3 +51,7 @@ function simpleDate(_timestamp = Date.now()){
     const format = date1.getDate() + "/" + (date1.getMonth()+1) + " " + hours + ":" + minutes + ":" + seconds
     return format;
 }
+
+function trimhash(_hash = "", w = 6){
+    return _hash.slice(0, w) +"..."+ _hash.slice(_hash.length-w, _hash.length)
+}
