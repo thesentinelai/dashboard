@@ -60,7 +60,34 @@
                     <a class="nav-link active" href="#">Home</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/dashboard.html">Get Started</a>
+                    <a class="nav-link nav-link-drop" href="#">
+                      <span>Menu</span>
+                      <svg class="nav-arrow" xmlns="http://www.w3.org/2000/svg" width="8" height="5" viewBox="0 0 8 5">
+                        <polygon points=".94 0 4 3.09 7.06 0 8 .951 4 5 0 .951" />
+                      </svg>
+                    </a>
+                    <div class="nav-drop">
+                      <div class="row">
+                        <div class="col-md-6">
+                          <a class="nav-group" href="/dashboard.html">
+                            <div class="nav-title">Dashboard</div>
+                            <div class="nav-text">Your one stop to decentralized training.</div>
+                          </a>
+                        </div>
+                        <div class="col-md-6">
+                          <a class="nav-group" href="/listnodes.html">
+                            <div class="nav-title">Show Nodes</div>
+                            <div class="nav-text">View the nodes available in the network for training.</div>
+                          </a>
+                        </div>
+                        <div class="col-md-6">
+                          <a class="nav-group" href="/store.html">
+                            <div class="nav-title">Decentralized Storage</div>
+                            <div class="nav-text">Store your files, Pay-as-you-go, Fully Decentralized.</div>
+                          </a>
+                        </div>
+                      </div>
+                    </div>
                   </li>
                 </ul>
               </div>
@@ -86,38 +113,21 @@
 
                       </div>
                     </div>
-                    <div class="col-md-6"><div class="theme" style="color: #807F81">Your Tasks</div>
-                      <div class="vacancy">
-                        <a href="#" class="vacancy-item">
-                          <div class="vacancy-title">Task ID: 1</div>
-                          <div class="vacancy-text">Started at Time</div>
-                          <div class="vacancy-arrow">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewBox="0 0 8 12">
-                              <polygon points="0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12"></polygon>
-                            </svg>
-                          </div>
-                        </a>
-                        <a href="#" class="vacancy-item">
-                          <div class="vacancy-title">Task ID: 1</div>
-                          <div class="vacancy-text">Started at Time</div>
-                          <div class="vacancy-arrow">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="8" height="12" viewBox="0 0 8 12">
-                              <polygon points="0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12"></polygon>
-                            </svg>
-                          </div>
-                        </a>
-                      </div>
+                    <div class="col-md-6"><div class="theme" style="color: #807F81" id="tasksTitle">Forming the pixels on your screen.</div>
+                      <figure class="preview" style="display: none;" id="noTasks">
+                        <img class="preview-pic" src="img/landing/nomodels.png" style="max-height: 500px;">
+                      </figure>
+                      <div class="vacancy" id="userTasks"></div>
                     </div>
                   </div>
-
-
             </div>
           </div>
         </div>
       </div>
-
       <script src="js/lib/jquery-3.4.1.min.js"></script>
       <script src="js/lib/bootstrap.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
       <script src="js/sentinel.js"></script>
       <script src="js/globals.js"></script>
       <script src="js/dashboard.js"></script>

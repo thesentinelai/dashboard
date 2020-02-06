@@ -93,19 +93,38 @@
             </div>
         </header>
 
-
       <div class="inner">
-        <div class="section" style="background: #fff">
+        <div class="section" style="background: #bffff0">
             <div class="container">
                 <div class="center">
-                  <div class="title title-2">Available Nodes</div>
-                  <!-- <div class="text"></div> -->
-                  <div class="btn-group-simple">
-                    <button class="btn btn-primary">Refresh List</button>
+                  <div class="title title-2">Task Details</div>
+                  <div class="sub-title title-4">Here is how your model is doing.</div>
+                </div>
+                <div class="row mb-100">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-preview">
+                              <img class="card-pic" src="img/landing/amount.png" alt="" style=" max-height: 300px; ">
+                            </div>
+                            <div class="title title-3" id="modelCost">0</div>
+                            <div class="card-text">Model Cost</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-preview">
+                              <img class="card-pic" src="img/landing/currentRound.png" alt="" style=" max-height: 300px; ">
+                            </div>
+                            <div class="title title-3" id="roundDetails">0</div>
+                            <div class="card-text">Round Details</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="center">
+                  <div class="title title-2">Grab Your Model</div>
+                </div>
+                <div class="vacancy" id="hashs">
                   </div>
-                </div>
-                <div class="vacancy" id="nodeList">
-                </div>
               </div>
         </div>
       </div>
@@ -116,6 +135,6 @@
     <script src="js/sentinel.js"></script>
     <script src="js/globals.js"></script>
     <script src="js/index.js"></script>
-    <script src="js/listnodes.js"></script>
+    <script src="js/tasks.js"></script>
   </body>
 </html>

@@ -38,3 +38,16 @@ window.addEventListener('load', async () => {
         alert("Get Web3 Compatible");
     }
 });
+
+
+function format_two_digits(n) {return n < 10 ? '0' + n : n;}
+
+function simpleDate(_timestamp = Date.now()){
+    if(_timestamp == 0 ) return 0;
+    const date1 = new Date(_timestamp*1000);
+    hours = format_two_digits(date1.getHours());
+    minutes = format_two_digits(date1.getMinutes());
+    seconds = format_two_digits(date1.getSeconds());
+    const format = date1.getDate() + "/" + (date1.getMonth()+1) + " " + hours + ":" + minutes + ":" + seconds
+    return format;
+}
