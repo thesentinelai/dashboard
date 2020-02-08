@@ -38,13 +38,37 @@ function modelhandle(event){
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.onreadystatechange = function(e) {
-        console.log(xhr);
         if(xhr['status'] == 200 && xhr['readyState'] == 4){
             console.log("Starting Transaction with model hash : " + xhr['responseText']);
-            createTask(xhr['responseText']);
+            Sentinel.allEvents(async function(error, event) {
+                if (error) {
+                  console.error(error);
+                  return false
+                }
+                else {
+                    if (event.event == "newTaskCreated"){
+                        var xhr = new XMLHttpRequest();
+                        let taskID = parseInt(event.args['taskID']);
+                        xhr.open("POST", `${COORDINATOR_NODE}${train_ep}/${taskID}`, true);
+                        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                        xhr.onreadystatechange = function(e) {
+                            if(xhr['status'] == 200 && xhr['readyState'] == 4){
+                                console.log(`Sending ${taskID} for training.`);
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Your Model has Started Training 🗺',
+                                    html: `Track your model's progress <a href="/tasks.html?taskID=${taskID}" target="_blank">Here</a>`
+                                });
+                            }
+                        }
+                        xhr.send(JSON.stringify({ "file_name": document.getElementsByTagName('input')[1].value}));
+                    }
+                }
+            });
+
         }
     }
-    xhr.send(JSON.stringify({ "file_name": document.getElementsByTagName('input')[1].value}));;
+    xhr.send(JSON.stringify({ "file_name": document.getElementsByTagName('input')[1].value}));
 }
 
 async function createTask( _modelHash = ""){
