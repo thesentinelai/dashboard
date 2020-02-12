@@ -60,7 +60,7 @@ async function getTaskHashes(_taskId = 1, _userAddress = web3.eth.accounts[0]) {
         let i = 0;
         let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 9312884, toBlock: 'latest'})
         newTaskCreatedEvent.get(async (error, logs) => {
-            hashsElement.innerHTML += `<a href='https://cloudflare-ipfs.com/ipfs/${logs[0].args['_modelHash']}' class='vacancy-item'> \
+            hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${logs[0].args['_modelHash']}' class='vacancy-item'> \
                     <div class='vacancy-title'>Model ${i+1}</div> \
                     <div class='vacancy-text'>${trimhash(logs[0].args['_modelHash'])}</div> \
                     <div class='vacancy-arrow'> \
@@ -74,7 +74,7 @@ async function getTaskHashes(_taskId = 1, _userAddress = web3.eth.accounts[0]) {
         modelUpdatedEvent.get(async (error, logs) => {
             i+=1;
             logs.forEach(async function(log){
-                hashsElement.innerHTML += `<a href='https://cloudflare-ipfs.com/ipfs/${log.args['_modelHash']}' class='vacancy-item'> \
+                hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${log.args['_modelHash']}' class='vacancy-item'> \
                     <div class='vacancy-title'>Model ${i+1}</div> \
                     <div class='vacancy-text'>${trimhash(log.args['_modelHash'])}</div> \
                     <div class='vacancy-arrow'> \

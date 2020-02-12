@@ -14,13 +14,7 @@ const contractABI=[
 			}
 		],
 		"name": "createTask",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"payable": true,
 		"stateMutability": "payable",
 		"type": "function"
@@ -122,13 +116,7 @@ const contractABI=[
 			}
 		],
 		"name": "storeFile",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -145,16 +133,15 @@ const contractABI=[
 				"internalType": "string",
 				"name": "_modelHash",
 				"type": "string"
+			},
+			{
+				"internalType": "address payable",
+				"name": "computer",
+				"type": "address"
 			}
 		],
 		"name": "updateModelForTask",
-		"outputs": [
-			{
-				"internalType": "bool",
-				"name": "",
-				"type": "bool"
-			}
-		],
+		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
@@ -314,7 +301,7 @@ const contractABI=[
 		"type": "function"
 	}
 ];
-const contractAddress = "0x6D00ae597d7A96B347Cf39Aa508df6db5ECFEfd1";
+const contractAddress = "0x2317d8504FdC96De4Ee82DfEd023B54cBBed1AE3";
 
 const COORDINATOR_NODE = "http://127.0.0.1:5000/";
 const upload_ep = "first-run";

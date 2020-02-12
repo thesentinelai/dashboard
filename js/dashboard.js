@@ -1,8 +1,8 @@
 async function init() {
     let form = document.getElementById( "modelSubmit" );
-    form.addEventListener( "submit", function ( event ) {
-        modelhandle(event);
-    } );
+    // form.addEventListener( "submit", function (event) {
+    //     modelhandle(event);
+    // } );
     await refreshUI();
 }
 
@@ -34,12 +34,14 @@ async function refreshUI(){
 function modelhandle(event){
     event.preventDefault();
     const url = COORDINATOR_NODE + upload_ep;
+    // console.log(url);
     var xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
     xhr.onreadystatechange = function(e) {
         if(xhr['status'] == 200 && xhr['readyState'] == 4){
             console.log("Starting Transaction with model hash : " + xhr['responseText']);
+            createTask(xhr['responseText']);
             Sentinel.allEvents(async function(error, event) {
                 if (error) {
                   console.error(error);
@@ -74,7 +76,7 @@ function modelhandle(event){
 async function createTask( _modelHash = ""){
     let promise = new Promise((res, rej) => {
 
-        Sentinel.createTask(_modelHash, 2, {value: 0},function(error, result) {
+        Sentinel.createTask(_modelHash, 3, {value: 0},function(error, result) {
             if (!error){
                 Swal.fire({
                     icon: 'success',
