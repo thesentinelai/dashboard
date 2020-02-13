@@ -6,7 +6,7 @@ async function init() {
 
 async function refreshUI(){
     let nodeListElement = document.getElementById('nodeList');
-    fetch(`${COORDINATOR_NODE}nodes`)
+    fetch(`${COORDINATOR_NODE}/nodes`)
     .then((response) => {
         return response.json();
     })
