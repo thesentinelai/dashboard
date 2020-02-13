@@ -106,7 +106,7 @@
                         <div class="title title-2">Just drop your model here.</div>
                         <div class="text">You can download a <i>number detection model</i> (MNIST) <a class="link" href="model2.h5">here</a> to test it out.</div>
 
-                        <form onsubmit="modelhandle(event)" id="modelSubmit">
+                        <form onsubmit="modelhandle(event)">
                             <input type="file" name="file" class="filepond" id="filepond">
                             <button class="btn btn-primary" id="submit" >Start Learning</button>
                         </form>
@@ -126,15 +126,15 @@
       </div>
       <script src="js/lib/jquery-3.4.1.min.js"></script>
       <script src="js/lib/bootstrap.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+      <script src="js/lib/sweetalert2@9.js"></script>
 
       <script src="js/sentinel.js"></script>
       <script src="js/globals.js"></script>
       <script src="js/dashboard.js"></script>
       <script src="js/index.js"></script>
 
-      <script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-      <script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+      <script src="js/lib/filepond-plugin-file-validate-size.js"></script>
+      <script src="js/lib/filepond-plugin-file-encode.js"></script>
       <script src="js/lib/filepond.js"></script>
 
       <script>
@@ -147,7 +147,7 @@
                   url: upload_ep,
                   method: 'POST',
                   withCredentials: false,
-                  timeout: 60000,
+                  timeout: 120000,
                   onload: null,
                   onerror: (error) => {
                     alert(error);
@@ -158,7 +158,7 @@
       });
       const pond = FilePond.create( document.getElementById("filepond"), {
           maxFiles: 1,
-          maxFileSize :'20MB'
+          maxFileSize :'10MB'
         });
 
       </script>

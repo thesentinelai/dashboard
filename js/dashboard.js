@@ -1,8 +1,4 @@
 async function init() {
-    let form = document.getElementById( "modelSubmit" );
-    // form.addEventListener( "submit", function (event) {
-    //     modelhandle(event);
-    // } );
     await refreshUI();
 }
 
@@ -33,13 +29,21 @@ async function refreshUI(){
 
 function modelhandle(event){
     event.preventDefault();
+    const submitBtn = document.getElementById("submit");
+
+    submitBtn.innerText = "Aww Yuss";
+    submitBtn.disabled = true;
     createTask(document.getElementsByTagName('input')[1].value);
     Sentinel.allEvents(async function(error, event) {
         if (error) {
             console.error(error);
+            submitBtn.innerText = "Start Learning";
+            submitBtn.disabled = false;
             return false
         }
         else {
+            submitBtn.innerText = "Almost there..";
+            submitBtn.disabled = true;
             if (event.event == "newTaskCreated"){
                 var xhr = new XMLHttpRequest();
                 let taskID = parseInt(event.args['taskID']);
@@ -53,6 +57,8 @@ function modelhandle(event){
                             title: 'Your Model has Started Training 🗺',
                             html: `Track your model's progress <a href="/tasks.html?taskID=${taskID}" target="_blank">Here</a>`
                         });
+                        submitBtn.innerText = "Start Learning";
+                        submitBtn.disabled = false;
                     }
                 }
                 xhr.send();
@@ -65,6 +71,9 @@ async function createTask( _modelHash = ""){
     let promise = new Promise((res, rej) => {
 
         Sentinel.createTask(_modelHash, 3, {value: 0},function(error, result) {
+
+            document.getElementById("submit").disabled = false;
+
             if (!error){
                 Swal.fire({
                     icon: 'success',
