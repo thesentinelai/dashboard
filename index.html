@@ -34,6 +34,16 @@
     <link rel="stylesheet" media="all" href="css/bootstrap.min.css">
     <link rel="stylesheet" media="all" href="css/lockdown.css">
     <link rel="stylesheet" media="all" href="css/custom.css">
+
+    <style>
+      .darkmode-layer {
+        z-index: 60 !important;
+      }
+      .darkmode-toggle{
+        z-index: 100 !important;
+      }
+    </style>
+
   </head>
   <body>
     <div class="page">
@@ -108,7 +118,7 @@
                 <div class="wrap">
                   <div class="theme" style="color: #0010a1">Backed by Ethereum</div>
                   <h2 class="title title-2">Incentivised Learning</h2>
-                  <div class="text">Users can either use Sentinel as a <b>trainer</b> for ML Models or earn ETH by becoming a <b>contributer</b> and providing valuable data to train the ML models.</div>
+                  <div class="text">Users can either use Sentinel as a <b>trainer</b> for ML Models or earn ETH by becoming a <b>contributor</b> and providing valuable data to train the ML models.</div>
                   <div class="accordion">
                     <div class="accordion-item active">
                       <div class="accordion-head">
@@ -234,13 +244,15 @@
             <div class="text text-sm">Drop us a message below.</div>
           </div>
 
-          <form class="col center" style="margin-bottom: 0px;" netlify>
-            <div class="row form-group" style="max-width: 500px;">
+          <form class="col center" style="margin-bottom: 0px;" name="Landing - Message Form" netlify>
+            <div class="row form-group" style="max-width: 500px;margin: 0px;">
               <input class="form-control" type="email" placeholder="Your email" required="" name = "email">
             </div>
-            <div class="row form-group" style="max-width: 500px;">
+            <br/>
+            <div class="row form-group" style="max-width: 500px;margin: 0px;">
               <input class="form-control" type="text" placeholder="Your Message" required="" style="height: 96px;"  name="message">
             </div>
+            <br/><br/>
             <button class="btn btn-primary" type="submit">Send</button>
           </form>
 
@@ -276,4 +288,22 @@
     }
     </script>
   </body>
+  <script src="js/lib/darkmode-js.min.js"></script>
+  <script>
+    var options = {
+      bottom: '32px',
+      left: 'unset',
+      right: '32px',
+      time: '0.5s',
+      mixColor: '#fff',
+      backgroundColor: '#fff',
+      buttonColorDark: '#100f2c',
+      buttonColorLight: '#fff',
+      saveInCookies: true,
+      label: '🌓',
+      autoMatchOsTheme: false
+    }
+    const darkmode = new Darkmode(options);
+    darkmode.showWidget();
+  </script>
 </html>

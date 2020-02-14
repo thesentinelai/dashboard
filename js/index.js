@@ -7,9 +7,16 @@ window.addEventListener('load', async () => {
         window.web3 = new Web3(ethereum);
         try {
                 await ethereum.enable();
+
+                ethereum.autoRefreshOnNetworkChange=false;
+
                 web3.version.getNetwork((err, netId) => {
-                    if(netId != 8995){
-                        alert("Please switch to https://testnet2.matic.network");
+                    if(netId != 16110){
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Wrong Network',
+                            html: `Please switch to https://betav2.matic.network`
+                        });
                     }
                 });
 
@@ -19,14 +26,20 @@ window.addEventListener('load', async () => {
                 init();
 
         } catch (error) {
-                console.log(error);
-                alert("MetaMask Denied");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'MetaMask Rejected'
+                });
         }
 
     } else if (window.web3) {
         web3.version.getNetwork((err, netId) => {
-            if(netId != 8995){
-                alert("Please switch to https://testnet2.matic.network");
+            if(netId != 16110){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Wrong Network',
+                    html: `Please switch to https://betav2.matic.network`
+                });
             }
         });
         window.web3 = new Web3(web3.currentProvider);
@@ -35,7 +48,11 @@ window.addEventListener('load', async () => {
 
         init();
     } else {
-        alert("Get Web3 Compatible");
+        Swal.fire({
+            icon: 'error',
+            title: 'MetaMask Rejected',
+            html: `Get a Web3 Compatible Browser like MetaMask or TrustWallet`
+        });
     }
 });
 

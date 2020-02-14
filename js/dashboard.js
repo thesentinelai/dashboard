@@ -1,6 +1,13 @@
 async function init() {
+
+    window.ethereum.on('accountsChanged', function (accounts) {
+        location.reload();
+    })
+    // web3.currentProvider.publicConfigStore.on('update', callback);
+
     await refreshUI();
 }
+
 
 async function refreshUI(){
     let tasksElement = document.getElementById("userTasks");
@@ -33,38 +40,50 @@ function modelhandle(event){
 
     submitBtn.innerText = "Aww Yuss";
     submitBtn.disabled = true;
-    createTask(document.getElementsByTagName('input')[1].value);
-    Sentinel.allEvents(async function(error, event) {
-        if (error) {
-            console.error(error);
-            submitBtn.innerText = "Start Learning";
-            submitBtn.disabled = false;
-            return false
-        }
-        else {
-            submitBtn.innerText = "Almost there..";
-            submitBtn.disabled = true;
-            if (event.event == "newTaskCreated"){
-                var xhr = new XMLHttpRequest();
-                let taskID = parseInt(event.args['taskID']);
-                xhr.open("POST", `${COORDINATOR_NODE}${train_ep}/${taskID}`, true);
-                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                xhr.onreadystatechange = function(e) {
-                    if(xhr['status'] == 200 && xhr['readyState'] == 4){
-                        console.log(`Sending ${taskID} for training.`);
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Your Model has Started Training 🗺',
-                            html: `Track your model's progress <a href="/tasks.html?taskID=${taskID}" target="_blank">Here</a>`
-                        });
-                        submitBtn.innerText = "Start Learning";
-                        submitBtn.disabled = false;
-                    }
-                }
-                xhr.send();
+
+    if (Boolean(document.getElementsByTagName('input')[1]) === false){
+
+        submitBtn.innerText = "Nani?!";
+        setTimeout(function(){ submitBtn.innerText = "Start Learning"; submitBtn.disabled = false;}, 2000);
+    }
+    else {
+
+        createTask(document.getElementsByTagName('input')[1].value);
+        Sentinel.allEvents(async function(error, event) {
+            if (error) {
+                console.error(error);
+                submitBtn.innerText = "Start Learning";
+                submitBtn.disabled = false;
+                return false
             }
-        }
-    });
+            else {
+                submitBtn.innerText = "Almost there..";
+                submitBtn.disabled = true;
+                if (event.event == "newTaskCreated"){
+                    var xhr = new XMLHttpRequest();
+                    let taskID = parseInt(event.args['taskID']);
+                    xhr.open("POST", `${COORDINATOR_NODE}${train_ep}/${taskID}`, true);
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    xhr.onreadystatechange = function(e) {
+                        if(xhr['status'] == 200 && xhr['readyState'] == 4){
+                            console.log(`Sending ${taskID} for training.`);
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Your Model has Started Training 🗺',
+                                html: `Track your model's progress <a href="/tasks.html?taskID=${taskID}" target="_blank">Here</a>`
+                            });
+                            submitBtn.innerText = "Start Learning";
+                            submitBtn.disabled = false;
+                        }
+                    }
+                    xhr.send();
+                }
+            }
+        });
+
+    }
+
+
 }
 
 async function createTask( _modelHash = ""){
@@ -78,7 +97,7 @@ async function createTask( _modelHash = ""){
                 Swal.fire({
                     icon: 'success',
                     title: 'Your Model is Awaiting Deployment',
-                    html: `Track your transaction <a href="https://explorer.testnet2.matic.network/tx/${result}">Here</a>`
+                    html: `Track your transaction <a href="https://betav2-explorer.matic.network/tx/${result}">Here</a>`
                 })
                 res(result);
             }

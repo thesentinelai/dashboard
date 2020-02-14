@@ -1,6 +1,7 @@
 
 async function init() {
     await refreshUI();
+    document.getElementById("refresh").addEventListener("click", reload);
 }
 
 
@@ -22,8 +23,16 @@ async function refreshUI(){
                 </div> \
             </a>`;
         }
+    }).catch(function() {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Check back again shortly',
+            html: `Coordinator Node Seems Offine`
+        });
     });
 };
 
-function checkCoordinator(){}
+function reload(){
+    location.reload();
+}
 function checkNodeHandler(){}

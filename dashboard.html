@@ -36,7 +36,16 @@
       <link rel="stylesheet" media="all" href="css/bootstrap.min.css">
       <link rel="stylesheet" media="all" href="css/lockdown.css">
       <link rel="stylesheet" media="all" href="css/custom.css">
-      <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+      <link href="css/filepond.css" rel="stylesheet">
+
+      <style>
+        .darkmode-layer {
+          z-index: 60 !important;
+        }
+        .darkmode-toggle{
+          z-index: 61 !important;
+        }
+      </style>
     </head>
     <body>
       <div class="page">
@@ -80,12 +89,6 @@
                             <div class="nav-text">View the nodes available in the network for training.</div>
                           </a>
                         </div>
-                        <div class="col-md-6">
-                          <a class="nav-group" href="/store.html">
-                            <div class="nav-title">Decentralized Storage</div>
-                            <div class="nav-text">Store your files, Pay-as-you-go, Fully Decentralized.</div>
-                          </a>
-                        </div>
                       </div>
                     </div>
                   </li>
@@ -115,7 +118,7 @@
                     </div>
                     <div class="col-md-6"><div class="theme" style="color: #807F81" id="tasksTitle">Forming the pixels on your screen.</div>
                       <figure class="preview" style="display: none;" id="noTasks">
-                        <img class="preview-pic" src="img/landing/nomodels.png" style="max-height: 500px;">
+                        <img class="preview-pic" src="img/landing/nomodels.png" style="max-height: 400px;">
                       </figure>
                       <div class="vacancy" id="userTasks"></div>
                     </div>
@@ -163,4 +166,23 @@
 
       </script>
     </body>
+    <script src="js/lib/darkmode-js.min.js"></script>
+    <script>
+      var options = {
+        bottom: '32px',
+        left: 'unset',
+        right: '32px',
+        time: '0.5s',
+        mixColor: '#fff',
+        backgroundColor: '#fff',
+        buttonColorDark: '#100f2c',
+        buttonColorLight: '#fff',
+        saveInCookies: true,
+        label: '🌓',
+        autoMatchOsTheme: true
+      }
+      const darkmode = new Darkmode(options);
+      darkmode.showWidget();
+    </script>
+
   </html>

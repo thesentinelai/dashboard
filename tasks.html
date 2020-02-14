@@ -35,6 +35,16 @@
         <link rel="stylesheet" media="all" href="css/lockdown.css">
         <link rel="stylesheet" media="all" href="css/custom.css">
         <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+
+        <style>
+          .darkmode-layer {
+            z-index: 60 !important;
+          }
+          .darkmode-toggle{
+            z-index: 61 !important;
+          }
+        </style>
+
       </head>
   <body>
     <div class="page">
@@ -76,12 +86,6 @@
                             <a class="nav-group" href="/listnodes.html">
                               <div class="nav-title">Show Nodes</div>
                               <div class="nav-text">View the nodes available in the network for training.</div>
-                            </a>
-                          </div>
-                          <div class="col-md-6">
-                            <a class="nav-group" href="/store.html">
-                              <div class="nav-title">Decentralized Storage</div>
-                              <div class="nav-text">Store your files, Pay-as-you-go, Fully Decentralized.</div>
                             </a>
                           </div>
                         </div>
@@ -137,4 +141,22 @@
     <script src="js/index.js"></script>
     <script src="js/tasks.js"></script>
   </body>
+  <script src="js/lib/darkmode-js.min.js"></script>
+  <script>
+    var options = {
+      bottom: '32px',
+      left: 'unset',
+      right: '32px',
+      time: '0.5s',
+      mixColor: '#fff',
+      backgroundColor: '#fff',
+      buttonColorDark: '#100f2c',
+      buttonColorLight: '#fff',
+      saveInCookies: true,
+      label: '🌓',
+      autoMatchOsTheme: true
+    }
+    const darkmode = new Darkmode(options);
+    darkmode.showWidget();
+  </script>
 </html>

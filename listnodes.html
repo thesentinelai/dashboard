@@ -34,7 +34,17 @@
         <link rel="stylesheet" media="all" href="css/bootstrap.min.css">
         <link rel="stylesheet" media="all" href="css/lockdown.css">
         <link rel="stylesheet" media="all" href="css/custom.css">
-        <link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+        <link href="css/filepond.css" rel="stylesheet">
+
+        <style>
+          .darkmode-layer {
+            z-index: 60 !important;
+          }
+          .darkmode-toggle{
+            z-index: 61 !important;
+          }
+        </style>
+
       </head>
   <body>
     <div class="page">
@@ -78,12 +88,6 @@
                               <div class="nav-text">View the nodes available in the network for training.</div>
                             </a>
                           </div>
-                          <div class="col-md-6">
-                            <a class="nav-group" href="/store.html">
-                              <div class="nav-title">Decentralized Storage</div>
-                              <div class="nav-text">Store your files, Pay-as-you-go, Fully Decentralized.</div>
-                            </a>
-                          </div>
                         </div>
                       </div>
                     </li>
@@ -99,9 +103,8 @@
             <div class="container">
                 <div class="center">
                   <div class="title title-2">Available Nodes</div>
-                  <!-- <div class="text"></div> -->
                   <div class="btn-group-simple">
-                    <button class="btn btn-primary">Refresh List</button>
+                    <button class="btn btn-primary" id="refresh">Refresh List</button>
                   </div>
                 </div>
                 <div class="vacancy" id="nodeList">
@@ -113,9 +116,28 @@
 
     <script src="js/lib/jquery-3.4.1.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
+    <script src="js/lib/sweetalert2@9.js"></script>
     <script src="js/sentinel.js"></script>
     <script src="js/globals.js"></script>
     <script src="js/index.js"></script>
     <script src="js/listnodes.js"></script>
   </body>
+  <script src="js/lib/darkmode-js.min.js"></script>
+    <script>
+      var options = {
+        bottom: '32px',
+        left: 'unset',
+        right: '32px',
+        time: '0.5s',
+        mixColor: '#fff',
+        backgroundColor: '#fff',
+        buttonColorDark: '#100f2c',
+        buttonColorLight: '#fff',
+        saveInCookies: true,
+        label: '🌓',
+        autoMatchOsTheme: true
+      }
+      const darkmode = new Darkmode(options);
+      darkmode.showWidget();
+    </script>
 </html>
