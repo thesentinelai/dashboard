@@ -125,7 +125,7 @@ async function getTasks(_userAddress = web3.eth.accounts[0]) {
 
         let responseData = [];
 
-        let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress}, {fromBlock: 0, toBlock: 'latest'})
+        let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress}, {fromBlock: 1279028, toBlock: 'latest'})
         newTaskCreatedEvent.get(async (error, logs) => {
             if(!error){
                 logs.forEach(async function(log){

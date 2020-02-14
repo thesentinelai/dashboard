@@ -24,31 +24,6 @@ const contractABI=[
 		"inputs": [
 			{
 				"indexed": true,
-				"internalType": "address",
-				"name": "_user",
-				"type": "address"
-			},
-			{
-				"indexed": false,
-				"internalType": "string",
-				"name": "_fileHash",
-				"type": "string"
-			},
-			{
-				"indexed": false,
-				"internalType": "uint256",
-				"name": "_time",
-				"type": "uint256"
-			}
-		],
-		"name": "fileAdded",
-		"type": "event"
-	},
-	{
-		"anonymous": false,
-		"inputs": [
-			{
-				"indexed": true,
 				"internalType": "uint256",
 				"name": "taskID",
 				"type": "uint256"
@@ -110,21 +85,6 @@ const contractABI=[
 		"constant": false,
 		"inputs": [
 			{
-				"internalType": "string",
-				"name": "_fileHash",
-				"type": "string"
-			}
-		],
-		"name": "storeFile",
-		"outputs": [],
-		"payable": false,
-		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": false,
-		"inputs": [
-			{
 				"internalType": "uint256",
 				"name": "_taskID",
 				"type": "uint256"
@@ -144,21 +104,6 @@ const contractABI=[
 		"outputs": [],
 		"payable": false,
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [],
-		"name": "getFiles",
-		"outputs": [
-			{
-				"internalType": "string[]",
-				"name": "",
-				"type": "string[]"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -262,32 +207,6 @@ const contractABI=[
 				"type": "uint256"
 			}
 		],
-		"name": "UserFiles",
-		"outputs": [
-			{
-				"internalType": "string",
-				"name": "",
-				"type": "string"
-			}
-		],
-		"payable": false,
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
-		"constant": true,
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "",
-				"type": "address"
-			},
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
 		"name": "UserTaskIDs",
 		"outputs": [
 			{
@@ -301,7 +220,7 @@ const contractABI=[
 		"type": "function"
 	}
 ];
-const contractAddress = "0x2317d8504FdC96De4Ee82DfEd023B54cBBed1AE3";
+const contractAddress = "0xA7F599AeE2dd3AB3a29D54820a9Ee12938cdb2fC";
 
 // const COORDINATOR_NODE = "https://sentinel-coor.anudit.dev:5000/";
 const COORDINATOR_NODE = "http://127.0.0.1:5000/";
