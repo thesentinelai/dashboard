@@ -1,6 +1,21 @@
 
 async function init() {
+
+    Sentinel.allEvents(async function(error, event) {
+		if (error) {
+		  console.error(error);
+		  return false
+		}
+		else {
+            console.log(event);
+            if (event.event == "modelUpdated" && event.args['_user'].toLowerCase() == web3.eth.accounts[0].toLowerCase()){
+               await refreshUI();
+            }
+		}
+    });
+
     await refreshUI();
+
 }
 
 async function refreshUI(){
@@ -10,10 +25,12 @@ async function refreshUI(){
         let taskDetails = await getTaskDetails(urldata['taskID']);
         document.getElementById('modelCost').innerText = taskDetails['cost'] + " ETH";
         document.getElementById('roundDetails').innerText = taskDetails['currentRound'] + "/" + taskDetails['totalRounds'];
-        // console.log(urldata['taskID']);
         await getTaskHashes(parseInt(urldata['taskID']));
     }
+
 };
+
+
 
 const getQueryParams = () => {
     let queryParams = {};
@@ -57,12 +74,12 @@ async function getTaskHashes(_taskId = 1, _userAddress = web3.eth.accounts[0]) {
     let promise = new Promise((res, rej) => {
 
         let hashsElement = document.getElementById("hashs");
-        let i = 0;
+        hashsElement.innerHTML="";
+
         let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
         newTaskCreatedEvent.get(async (error, logs) => {
-            console.log(logs);
             hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${logs[0].args['_modelHash']}' class='vacancy-item'> \
-                    <div class='vacancy-title'>Model ${i+1}</div> \
+                    <div class='vacancy-title'>Model ${1}</div> \
                     <div class='vacancy-text'>${trimhash(logs[0].args['_modelHash'])}</div> \
                     <div class='vacancy-arrow'> \
                     <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
@@ -71,12 +88,13 @@ async function getTaskHashes(_taskId = 1, _userAddress = web3.eth.accounts[0]) {
                     </div> \
                 </a>`;
         });
+
         let modelUpdatedEvent = Sentinel.modelUpdated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
         modelUpdatedEvent.get(async (error, logs) => {
-
+            let i = 2;
             logs.forEach(async function(log){
                 hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${log.args['_modelHash']}' class='vacancy-item'> \
-                    <div class='vacancy-title'>Model ${i+1}</div> \
+                    <div class='vacancy-title'>Model ${i}</div> \
                     <div class='vacancy-text'>${trimhash(log.args['_modelHash'])}</div> \
                     <div class='vacancy-arrow'> \
                     <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
