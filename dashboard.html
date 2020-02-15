@@ -111,6 +111,11 @@
 
                         <form onsubmit="modelhandle(event)">
                             <input type="file" name="file" class="filepond" id="filepond">
+
+                            <div class="slidecontainer">
+                              <p>Choose the number of <b>training rounds</b>: <span id="rndCntLabel"></span></p>
+                              <input type="range" min="1" max="9" value="3" class="slider" id="rndCount">
+                            </div><br><br>
                             <button class="btn btn-primary" id="submit" >Start Learning</button>
                         </form>
 

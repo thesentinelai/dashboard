@@ -3,7 +3,13 @@ async function init() {
     window.ethereum.on('accountsChanged', function (accounts) {
         location.reload();
     })
-    // web3.currentProvider.publicConfigStore.on('update', callback);
+
+    var slider = document.getElementById("rndCount");
+    var output = document.getElementById("rndCntLabel");
+    output.innerHTML = slider.value;
+    slider.oninput = function() {
+      output.innerHTML = this.value;
+    }
 
     await refreshUI();
 }
@@ -41,8 +47,7 @@ function modelhandle(event){
     submitBtn.innerText = "Aww Yuss";
     submitBtn.disabled = true;
 
-    if (Boolean(document.getElementsByTagName('input')[1]) === false){
-
+    if (document.getElementsByTagName('input').length < 3) {
         submitBtn.innerText = "Nani?!";
         setTimeout(function(){ submitBtn.innerText = "Start Learning"; submitBtn.disabled = false;}, 2000);
     }
@@ -89,29 +94,42 @@ function modelhandle(event){
 async function createTask( _modelHash = ""){
     let promise = new Promise((res, rej) => {
 
-        Sentinel.createTask(_modelHash, 3, {value: 0},function(error, result) {
+        if(_modelHash.slice(0, 2) != "Qm"){
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid Model File',
+                text: 'Your can try Sentinel out by using the provided sample model file.'
+            })
+            rej("Invalid File");
+        }
+        else{
+            const rndCount = parseInt(document.getElementById("rndCount").value);
+            Sentinel.createTask(_modelHash, rndCount, {value: 0},function(error, result) {
 
-            document.getElementById("submit").disabled = false;
+                document.getElementById("submit").disabled = false;
 
-            if (!error){
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Your Model is Awaiting Deployment',
-                    html: `Track your transaction <a href="https://betav2-explorer.matic.network/tx/${result}">Here</a>`
-                })
-                res(result);
-            }
+                if (!error){
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Your Model is Awaiting Deployment',
+                        html: `Track your transaction <a href="https://betav2-explorer.matic.network/tx/${result}">Here</a>`
+                    })
+                    res(result);
+                }
 
-            else{
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Transaction Failed',
-                    text: 'MetaMask Denied!'
-                })
-                rej(error);
-            }
+                else{
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Transaction Failed',
+                        text: 'MetaMask Denied!'
+                    })
+                    rej(error);
+                }
 
-        });
+            });
+        }
+
+
 
     });
     let result = await promise;
