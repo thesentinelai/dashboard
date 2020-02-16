@@ -4,6 +4,12 @@ async function init() {
         location.reload();
     })
 
+    document.getElementById("userAddress").innerText = trimAdd(web3.eth.accounts[0]);
+
+    web3.eth.getBalance(web3.eth.accounts[0], function(error, result) {
+        document.getElementById("userBalance").innerText = parseFloat(web3.fromWei(result, "ether")).toFixed(2)+" ETH";
+    })
+
     var slider = document.getElementById("rndCount");
     var output = document.getElementById("rndCntLabel");
     output.innerHTML = slider.value;
@@ -11,7 +17,7 @@ async function init() {
       output.innerHTML = this.value;
     }
 
-    await refreshUI();
+    refreshUI();
 }
 
 
@@ -75,7 +81,18 @@ function modelhandle(event){
                             Swal.fire({
                                 icon: 'success',
                                 title: 'Your Model has Started Training 🗺',
-                                html: `Track your model's progress <a href="/tasks.html?taskID=${taskID}" target="_blank">Here</a>`
+                                html: `You can now track you Model's progress.`,
+                                backdrop: `rgba(0,0,123,0.4)
+                                    url("/img/landing/nyan-cat.gif")
+                                    left top
+                                    no-repeat
+                                `,
+                                confirmButtonColor: '#0016b9',
+                                confirmButtonText: 'Track Progress'
+                            }).then((result) => {
+                                if (result.value) {
+                                    location = `/tasks.html?taskID=${taskID}`;
+                                }
                             });
                             submitBtn.innerText = "Start Learning";
                             submitBtn.disabled = false;

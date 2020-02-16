@@ -1,21 +1,10 @@
 
 async function init() {
 
-    Sentinel.allEvents(async function(error, event) {
-		if (error) {
-		  console.error(error);
-		  return false
-		}
-		else {
-            console.log(event);
-            if (event.event == "modelUpdated" && event.args['_user'].toLowerCase() == web3.eth.accounts[0].toLowerCase()){
-               await refreshUI();
-            }
-		}
-    });
+    let urldata = getQueryParams();
 
-    await refreshUI();
-
+    refreshUI();
+    document.getElementById("latestLink").addEventListener("click", await copyLatest);
 }
 
 async function refreshUI(){
@@ -25,12 +14,65 @@ async function refreshUI(){
         let taskDetails = await getTaskDetails(urldata['taskID']);
         document.getElementById('modelCost').innerText = taskDetails['cost'] + " ETH";
         document.getElementById('roundDetails').innerText = taskDetails['currentRound'] + "/" + taskDetails['totalRounds'];
-        await getTaskHashes(parseInt(urldata['taskID']));
+        getTaskHashes(parseInt(urldata['taskID']));
+    }
+    else{
+        window.location= '/dashboard.html';
     }
 
 };
 
+async function copyLatest(_userAddress = web3.eth.accounts[0]){
+    let urldata = getQueryParams();
+    let _taskId = urldata['taskID'];
+    let modelUpdatedEvent = Sentinel.modelUpdated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
+    modelUpdatedEvent.get(async (error, logs) => {
+        if (logs.length > 0){
+            Swal.fire({
+                icon: 'success',
+                title: 'Here is your direct link',
+                html: `<code id="lastestLink">https://ipfs.io/ipfs/${logs[logs.length-1].args['_modelHash']}</code>`,
+                backdrop: `rgba(0,0,123,0.4)`,
+                confirmButtonColor: '#0016b9',
+                confirmButtonText: 'Copy'
+            }).then((result) => {
+                if (result.value) {
+                    copyToClipboard(`https://ipfs.io/ipfs/${logs[logs.length-1].args['_modelHash']}`);
+                }
+            });
+        }
+        else {
+            let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
+            newTaskCreatedEvent.get(async (error, logs) => {
+                console.log(`https://ipfs.io/ipfs/${logs[0].args['_modelHash']}`)
+            });
+        }
 
+    });
+}
+
+
+async function viewModelLinks(){
+    let promise = new Promise((res, rej) => {
+
+        Sentinel.SentinelTasks(_taskId,function(error, result) {
+            if (!error)
+                res(result);
+            else{
+                rej(false);
+            }
+        });
+
+    });
+    let result = await promise;
+    let resultDict = {
+        'taskID':parseInt(result[0]),
+        'currentRound':parseInt(result[1]),
+        'totalRounds':parseInt(result[2]),
+        'cost':parseInt(result[3]),
+    };
+    return resultDict;
+}
 
 const getQueryParams = () => {
     let queryParams = {};
