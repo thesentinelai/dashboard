@@ -222,7 +222,6 @@ const contractABI=[
 ];
 const contractAddress = "0xA7F599AeE2dd3AB3a29D54820a9Ee12938cdb2fC";
 
-const COORDINATOR_NODE = "https://sentinel-coor.anudit.dev/";
-// const COORDINATOR_NODE = "http://127.0.0.1:5000/";
+const COORDINATOR_NODE = "https://coordinator.sentinelai.hmny.io/";
 const upload_ep = "first-run";
 const train_ep = "sendtrain";
