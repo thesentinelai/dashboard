@@ -11,11 +11,11 @@ window.addEventListener('load', async () => {
                 ethereum.autoRefreshOnNetworkChange=false;
 
                 web3.version.getNetwork((err, netId) => {
-                    if(netId != 16110){
+                    if(netId != 80001){
                         Swal.fire({
                             icon: 'error',
                             title: 'Wrong Network',
-                            html: `Please switch to https://betav2.matic.network`
+                            html: `Please switch to https://rpc-mumbai.matic.today`
                         });
                     }
                 });
@@ -38,7 +38,7 @@ window.addEventListener('load', async () => {
                 Swal.fire({
                     icon: 'error',
                     title: 'Wrong Network',
-                    html: `Please switch to https://betav2.matic.network`
+                    html: `Please switch to https://rpc-mumbai.matic.today`
                 });
             }
         });

@@ -1,6 +1,5 @@
 const contractABI=[
 	{
-		"constant": false,
 		"inputs": [
 			{
 				"internalType": "string",
@@ -15,9 +14,44 @@ const contractABI=[
 		],
 		"name": "createTask",
 		"outputs": [],
-		"payable": true,
 		"stateMutability": "payable",
 		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_coordinatorAddress",
+				"type": "address"
+			}
+		],
+		"stateMutability": "nonpayable",
+		"type": "constructor"
+	},
+	{
+		"anonymous": false,
+		"inputs": [
+			{
+				"indexed": true,
+				"internalType": "address",
+				"name": "_user",
+				"type": "address"
+			},
+			{
+				"indexed": false,
+				"internalType": "string",
+				"name": "_fileHash",
+				"type": "string"
+			},
+			{
+				"indexed": false,
+				"internalType": "uint256",
+				"name": "_time",
+				"type": "uint256"
+			}
+		],
+		"name": "fileAdded",
+		"type": "event"
 	},
 	{
 		"anonymous": false,
@@ -82,7 +116,32 @@ const contractABI=[
 		"type": "event"
 	},
 	{
-		"constant": false,
+		"inputs": [
+			{
+				"internalType": "string",
+				"name": "_fileHash",
+				"type": "string"
+			}
+		],
+		"name": "storeFile",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_coordinatorAddress",
+				"type": "address"
+			}
+		],
+		"name": "updateCoordinator",
+		"outputs": [],
+		"stateMutability": "nonpayable",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -102,12 +161,36 @@ const contractABI=[
 		],
 		"name": "updateModelForTask",
 		"outputs": [],
-		"payable": false,
 		"stateMutability": "nonpayable",
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"inputs": [],
+		"name": "coordinatorAddress",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [],
+		"name": "getFiles",
+		"outputs": [
+			{
+				"internalType": "string[]",
+				"name": "",
+				"type": "string[]"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [],
 		"name": "getTaskCount",
 		"outputs": [
@@ -117,12 +200,10 @@ const contractABI=[
 				"type": "uint256"
 			}
 		],
-		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"constant": true,
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -138,12 +219,10 @@ const contractABI=[
 				"type": "string[]"
 			}
 		],
-		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"constant": true,
 		"inputs": [],
 		"name": "getTasksOfUser",
 		"outputs": [
@@ -153,12 +232,23 @@ const contractABI=[
 				"type": "uint256[]"
 			}
 		],
-		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"inputs": [],
+		"name": "owner",
+		"outputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "uint256",
@@ -189,12 +279,34 @@ const contractABI=[
 				"type": "uint256"
 			}
 		],
-		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	},
 	{
-		"constant": true,
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"name": "UserFiles",
+		"outputs": [
+			{
+				"internalType": "string",
+				"name": "",
+				"type": "string"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
 		"inputs": [
 			{
 				"internalType": "address",
@@ -215,13 +327,13 @@ const contractABI=[
 				"type": "uint256"
 			}
 		],
-		"payable": false,
 		"stateMutability": "view",
 		"type": "function"
 	}
 ];
-const contractAddress = "0xA7F599AeE2dd3AB3a29D54820a9Ee12938cdb2fC";
+const contractAddress = "0x6d81122f119d2893C2Ab91F3F1cBc771bBBfBA26";
 
-const COORDINATOR_NODE = "https://coordinator.sentinelai.hmny.io/";
+// const COORDINATOR_NODE = "https://coordinator.sentinelai.hmny.io/";
+const COORDINATOR_NODE = "http://127.0.0.1:5000/";
 const upload_ep = "first-run";
 const train_ep = "sendtrain";
