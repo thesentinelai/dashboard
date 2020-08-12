@@ -4,10 +4,16 @@ async function init() {
         location.reload();
     })
 
-    document.getElementById("userAddress").innerText = trimAdd(web3.eth.accounts[0]);
+    const node = await Ipfs.create({ repo: 'ipfs-' + Math.random() });
+    window.node = node;
+    const status = node.isOnline() ? 'online' : 'offline';
+    console.log(`Node status: ${status}`);
 
-    web3.eth.getBalance(web3.eth.accounts[0], function(error, result) {
-        document.getElementById("userBalance").innerText = parseFloat(web3.fromWei(result, "ether")).toFixed(2)+" ETH";
+
+    document.getElementById("userAddress").innerText = trimAdd(web3.currentProvider.selectedAddress);
+
+    web3.eth.getBalance(web3.currentProvider.selectedAddress).then((balance)=>{
+        document.getElementById("userBalance").innerText = parseFloat(web3.utils.fromWei(balance, "ether")).toFixed(2)+" ETH";
     })
 
     var slider = document.getElementById("rndCount");
@@ -46,61 +52,77 @@ async function refreshUI(){
 
 }
 
-function modelhandle(event){
+async function modelhandle(event){
     event.preventDefault();
     const submitBtn = document.getElementById("submit");
 
     submitBtn.innerText = "Aww Yuss";
     submitBtn.disabled = true;
 
-    if (document.getElementsByTagName('input').length < 3) {
+    if (document.querySelector('#modelfile').files.length < 1) {
         submitBtn.innerText = "Nani?!";
         setTimeout(function(){ submitBtn.innerText = "Start Learning"; submitBtn.disabled = false;}, 2000);
     }
     else {
+        let data = await node.add(document.querySelector('#modelfile').files[0]);
 
-        createTask(document.getElementsByTagName('input')[1].value);
-        Sentinel.allEvents(async function(error, event) {
-            if (error) {
-                console.error(error);
-                submitBtn.innerText = "Start Learning";
-                submitBtn.disabled = false;
-                return false
-            }
-            else {
-                submitBtn.innerText = "Almost there..";
-                submitBtn.disabled = true;
-                if (event.event == "newTaskCreated"){
-                    var xhr = new XMLHttpRequest();
-                    let taskID = parseInt(event.args['taskID']);
-                    xhr.open("POST", `${COORDINATOR_NODE}${train_ep}/${taskID}`, true);
-                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-                    xhr.onreadystatechange = function(e) {
-                        if(xhr['status'] == 200 && xhr['readyState'] == 4){
-                            console.log(`Sending ${taskID} for training.`);
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Your Model has Started Training 🗺',
-                                html: `You can now track you Model's progress.`,
-                                backdrop: `rgba(0,0,123,0.4)
-                                    url("/img/landing/nyan-cat.gif")
-                                    left top
-                                    no-repeat
-                                `,
-                                confirmButtonColor: '#0016b9',
-                                confirmButtonText: 'Track Progress'
-                            }).then((result) => {
-                                if (result.value) {
-                                    location = `/tasks.html?taskID=${taskID}`;
-                                }
-                            });
-                            submitBtn.innerText = "Start Learning";
-                            submitBtn.disabled = false;
-                        }
+        createTask(data['path']);
+
+
+        submitBtn.innerText = "Almost there..";
+        submitBtn.disabled = true;
+
+        var wsWeb3 = new Web3(new Web3.providers.WebsocketProvider("wss://ws-mumbai.matic.today"));
+
+        wsWeb3.eth.getBlockNumber()
+        .then((currentBlock)=>{
+            let topic2 = '0x000000000000000000000000' + web3.currentProvider.selectedAddress.slice(2,);
+            var subscription = wsWeb3.eth.subscribe('logs', {
+                fromBlock: currentBlock,
+                address: contractAddress,
+                topics: [
+                    '0xceb55fb99742a0d2305c686897f79e89483a9725c0f5493808c9a4787f2a875a', // newTaskCreated
+                    null,
+                    topic2
+                ]
+            }, function(error, result){
+                if (!error)
+                    console.log("resolved in event tracking");
+            })
+            .on("connected", function(subscriptionId){
+                console.log(`tracking : newTaskCreated ${subscriptionId}`);
+            })
+            .on("data", function(event){
+                console.log(event);
+                var xhr = new XMLHttpRequest();
+                let taskID = parseInt(event.topics[1]);
+                xhr.open("POST", `${COORDINATOR_NODE}${train_ep}/${taskID}`, true);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onreadystatechange = function(e) {
+                    if(xhr['status'] == 200 && xhr['readyState'] == 4){
+                        console.log(`Sending ${taskID} for training.`);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Your Model has Started Training 🗺',
+                            html: `You can now track you Model's progress.`,
+                            backdrop: `rgba(0,0,123,0.4)
+                                url("/img/landing/nyan-cat.gif")
+                                left top
+                                no-repeat
+                            `,
+                            confirmButtonColor: '#0016b9',
+                            confirmButtonText: 'Track Progress'
+                        }).then((result) => {
+                            if (result.value) {
+                                location = `/tasks.html?taskID=${taskID}`;
+                            }
+                        });
+                        submitBtn.innerText = "Start Learning";
+                        submitBtn.disabled = false;
                     }
-                    xhr.send();
                 }
-            }
+                xhr.send();
+            })
         });
 
     }
@@ -121,15 +143,14 @@ async function createTask( _modelHash = ""){
         }
         else{
             const rndCount = parseInt(document.getElementById("rndCount").value);
-            Sentinel.createTask(_modelHash, rndCount, {value: 0},function(error, result) {
-
+            SentinelContract.methods.createTask(_modelHash, rndCount).send({from:web3.currentProvider.selectedAddress}, function(error, result) {
                 document.getElementById("submit").disabled = false;
 
                 if (!error){
                     Swal.fire({
                         icon: 'success',
                         title: 'Your Model is Awaiting Deployment',
-                        html: `Track your transaction <a href="https://betav2-explorer.matic.network/tx/${result}">Here</a>`
+                        html: `Track your transaction <a href="https://mumbai-explorer.matic.today/tx/${result}">Here</a>`
                     })
                     res(result);
                 }
@@ -142,7 +163,6 @@ async function createTask( _modelHash = ""){
                     })
                     rej(error);
                 }
-
             });
         }
 
@@ -154,17 +174,19 @@ async function createTask( _modelHash = ""){
 }
 
 
-async function getTasks(_userAddress = web3.eth.accounts[0]) {
+async function getTasks(_userAddress = web3.currentProvider.selectedAddress) {
 
     let promise = new Promise((res, rej) => {
 
         let responseData = [];
-
-        let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress}, {fromBlock: 1279028, toBlock: 'latest'})
-        newTaskCreatedEvent.get(async (error, logs) => {
+        SentinelContract.getPastEvents('newTaskCreated', {
+            filter: {_user: _userAddress},
+            fromBlock: 2865232,
+            toBlock: 'latest'
+        }, function(error, logs){
             if(!error){
                 logs.forEach(async function(log){
-                    let logData = log.args;
+                    let logData = log.returnValues;
                     let date = simpleDate(parseInt(logData['_time']));
                     let taskIndex = parseInt(logData['taskID']);
                     responseData.push([taskIndex, date]);

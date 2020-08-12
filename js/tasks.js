@@ -1,10 +1,7 @@
 
 async function init() {
-
-    let urldata = getQueryParams();
-
     refreshUI();
-    document.getElementById("latestLink").addEventListener("click", await copyLatest);
+    document.getElementById("latestLink").addEventListener("click", copyLatest);
 }
 
 async function refreshUI(){
@@ -22,40 +19,67 @@ async function refreshUI(){
 
 };
 
-async function copyLatest(_userAddress = web3.eth.accounts[0]){
+async function copyLatest(){
+    let _userAddress = web3.currentProvider.selectedAddress;
     let urldata = getQueryParams();
     let _taskId = urldata['taskID'];
-    let modelUpdatedEvent = Sentinel.modelUpdated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
-    modelUpdatedEvent.get(async (error, logs) => {
-        if (logs.length > 0){
-            Swal.fire({
-                icon: 'success',
-                title: 'Here is your direct link',
-                html: `<code id="lastestLink">https://ipfs.io/ipfs/${logs[logs.length-1].args['_modelHash']}</code>`,
-                backdrop: `rgba(0,0,123,0.4)`,
-                confirmButtonColor: '#0016b9',
-                confirmButtonText: 'Copy'
-            }).then((result) => {
-                if (result.value) {
-                    copyToClipboard(`https://ipfs.io/ipfs/${logs[logs.length-1].args['_modelHash']}`);
-                }
-            });
-        }
-        else {
-            let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
-            newTaskCreatedEvent.get(async (error, logs) => {
-                console.log(`https://ipfs.io/ipfs/${logs[0].args['_modelHash']}`)
-            });
-        }
 
-    });
+    SentinelContract.getPastEvents('modelUpdated', {
+        filter: {_user: _userAddress, taskID: _taskId},
+        fromBlock: 2865232,
+        toBlock: 'latest'
+    }, function(error, logs){
+        if(!error){
+            if (logs.length > 0){
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Here is your direct link',
+                    html: `<code id="lastestLink">https://ipfs.io/ipfs/${logs[logs.length-1].returnValues['_modelHash']}</code>`,
+                    backdrop: `rgba(0,0,123,0.4)`,
+                    confirmButtonColor: '#0016b9',
+                    confirmButtonText: 'Copy'
+                }).then((result) => {
+                    if (result.value) {
+                        copyToClipboard(`https://ipfs.io/ipfs/${logs[logs.length-1].returnValues['_modelHash']}`);
+                    }
+                });
+            }
+            else {
+
+                SentinelContract.getPastEvents('newTaskCreated', {
+                    filter: {_user: _userAddress, taskID: _taskId},
+                    fromBlock: 2865232,
+                    toBlock: 'latest'
+                }, function(error, logs){
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Here is your direct link',
+                        html: `<code id="lastestLink">https://ipfs.io/ipfs/${logs[0].returnValues['_modelHash']}</code>`,
+                        backdrop: `rgba(0,0,123,0.4)`,
+                        confirmButtonColor: '#0016b9',
+                        confirmButtonText: 'Copy'
+                    }).then((result) => {
+                        if (result.value) {
+                            copyToClipboard(`https://ipfs.io/ipfs/${logs[0].returnValues['_modelHash']}`);
+                        }
+                    });
+
+
+                    console.log()
+                })
+            }
+
+        }
+    })
+
 }
 
 
 async function viewModelLinks(){
     let promise = new Promise((res, rej) => {
 
-        Sentinel.SentinelTasks(_taskId,function(error, result) {
+        SentinelContract.methods.SentinelTasks(_taskId,function(error, result) {
             if (!error)
                 res(result);
             else{
@@ -92,7 +116,7 @@ async function getTaskDetails(_taskId = 1) {
 
     let promise = new Promise((res, rej) => {
 
-        Sentinel.SentinelTasks(_taskId,function(error, result) {
+        SentinelContract.methods.SentinelTasks(_taskId).call(function(error, result) {
             if (!error)
                 res(result);
             else{
@@ -111,42 +135,54 @@ async function getTaskDetails(_taskId = 1) {
     return resultDict;
 }
 
-async function getTaskHashes(_taskId = 1, _userAddress = web3.eth.accounts[0]) {
+async function getTaskHashes(_taskId = 1, _userAddress = web3.currentProvider.selectedAddress) {
 
     let promise = new Promise((res, rej) => {
 
         let hashsElement = document.getElementById("hashs");
         hashsElement.innerHTML="";
 
-        let newTaskCreatedEvent = Sentinel.newTaskCreated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
-        newTaskCreatedEvent.get(async (error, logs) => {
-            hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${logs[0].args['_modelHash']}' class='vacancy-item'> \
-                    <div class='vacancy-title'>Model ${1}</div> \
-                    <div class='vacancy-text'>${trimhash(logs[0].args['_modelHash'])}</div> \
-                    <div class='vacancy-arrow'> \
-                    <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
-                        <polygon points='0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12'></polygon> \
-                    </svg> \
-                    </div> \
-                </a>`;
-        });
 
-        let modelUpdatedEvent = Sentinel.modelUpdated({ _user: _userAddress, taskID: _taskId}, {fromBlock: 1279028, toBlock: 'latest'})
-        modelUpdatedEvent.get(async (error, logs) => {
-            let i = 2;
-            logs.forEach(async function(log){
-                hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${log.args['_modelHash']}' class='vacancy-item'> \
-                    <div class='vacancy-title'>Model ${i}</div> \
-                    <div class='vacancy-text'>${trimhash(log.args['_modelHash'])}</div> \
-                    <div class='vacancy-arrow'> \
-                    <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
-                        <polygon points='0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12'></polygon> \
-                    </svg> \
-                    </div> \
+        SentinelContract.getPastEvents('newTaskCreated', {
+            filter: {_user: _userAddress, taskID: _taskId},
+            fromBlock: 2865232,
+            toBlock: 'latest'
+        }, function(error, logs){
+            if(!error){
+                hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${logs[0].returnValues['_modelHash']}' class='vacancy-item'>
+                    <div class='vacancy-title'>Model ${1}</div>
+                    <div class='vacancy-text'>${trimhash(logs[0].returnValues['_modelHash'])}</div>
+                    <div class='vacancy-arrow'>
+                    <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'>
+                        <polygon points='0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12'></polygon>
+                    </svg>
+                    </div>
                 </a>`;
-                i+=1;
-            })
-        });
+            }
+        })
+
+        SentinelContract.getPastEvents('modelUpdated', {
+            filter: {_user: _userAddress, taskID: _taskId},
+            fromBlock: 2865232,
+            toBlock: 'latest'
+        }, function(error, logs){
+            if(!error){
+                let i = 2;
+                logs.forEach(async function(log){
+                    hashsElement.innerHTML += `<a href='https://ipfs.io/ipfs/${log.returnValues['_modelHash']}' class='vacancy-item'> \
+                        <div class='vacancy-title'>Model ${i}</div> \
+                        <div class='vacancy-text'>${trimhash(log.returnValues['_modelHash'])}</div> \
+                        <div class='vacancy-arrow'> \
+                        <svg xmlns='http://www.w3.org/2000/svg' width='8' height='12' viewBox='0 0 8 12'> \
+                            <polygon points='0 10.59 4.58 6 0 1.41 1.41 0 7.41 6 1.41 12'></polygon> \
+                        </svg> \
+                        </div> \
+                    </a>`;
+                    i+=1;
+                })
+            }
+        })
+
         res(true);
     });
     let result = await promise;

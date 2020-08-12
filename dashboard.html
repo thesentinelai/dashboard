@@ -36,7 +36,6 @@
       <link rel="stylesheet" media="all" href="css/bootstrap.min.css">
       <link rel="stylesheet" media="all" href="css/lockdown.css">
       <link rel="stylesheet" media="all" href="css/custom.css">
-      <link href="css/filepond.css" rel="stylesheet">
 
       <style>
         .darkmode-layer {
@@ -113,10 +112,10 @@
                       <div class="wrap">
                         <div class="theme" style="color: #0189D1">Let's Get Started.</div>
                         <div class="title title-2">Just drop your model here.</div>
-                        <div class="text">You can download a <i>number detection model</i> (MNIST) <a class="link" href="model2.h5">here</a> to test it out.</div>
+                        <div class="text">You can download a <i>number detection model</i> (MNIST) <a class="link" href="model.h5">here</a> to test it out.</div>
 
                         <form onsubmit="modelhandle(event)">
-                            <input type="file" name="file" class="filepond" id="filepond">
+                            <input type="file" name="file" id="modelfile">
 
                             <div class="slidecontainer">
                               <p>Choose the number of <b>training rounds</b>: <span id="rndCntLabel"></span></p>
@@ -138,44 +137,16 @@
           </div>
         </div>
       </div>
-      <script src="js/lib/jquery-3.4.1.min.js"></script>
+      <script src="js/lib/web3@1.2.11.js"></script>
       <script src="js/lib/bootstrap.min.js"></script>
       <script src="js/lib/sweetalert2@9.js"></script>
+      <script src="js/lib/ipfs@0.48.1.js"></script>
 
-      <script src="js/sentinel.js"></script>
       <script src="js/globals.js"></script>
       <script src="js/dashboard.js"></script>
       <script src="js/index.js"></script>
 
-      <script src="js/lib/filepond-plugin-file-validate-size.js"></script>
-      <script src="js/lib/filepond-plugin-file-encode.js"></script>
-      <script src="js/lib/filepond.js"></script>
 
-      <script>
-      FilePond.registerPlugin(FilePondPluginFileValidateSize);
-      FilePond.registerPlugin(FilePondPluginFileEncode);
-      FilePond.setOptions({
-          server: {
-              url: COORDINATOR_NODE,
-              process: {
-                  url: upload_ep,
-                  method: 'POST',
-                  withCredentials: false,
-                  timeout: 120000,
-                  onload: null,
-                  onerror: (error) => {
-                    alert(error);
-                  },
-                  ondata: null
-              }
-          }
-      });
-      const pond = FilePond.create( document.getElementById("filepond"), {
-          maxFiles: 1,
-          maxFileSize :'10MB'
-        });
-
-      </script>
     </body>
     <script src="js/lib/darkmode-js.min.js"></script>
     <script>

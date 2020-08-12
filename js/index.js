@@ -1,40 +1,15 @@
-SentinelContract = undefined;
-Sentinel = undefined;
+let SentinelContract;
+
+if (typeof window.ethereum !== 'undefined') {
+    ethereum.autoRefreshOnNetworkChange = false;
+}
 
 window.addEventListener('load', async () => {
 
-    if (window.ethereum) {
-        window.web3 = new Web3(ethereum);
-        try {
-                await ethereum.enable();
+    if (window.web3) {
 
-                ethereum.autoRefreshOnNetworkChange=false;
-
-                web3.version.getNetwork((err, netId) => {
-                    if(netId != 80001){
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Wrong Network',
-                            html: `Please switch to https://rpc-mumbai.matic.today`
-                        });
-                    }
-                });
-
-                SentinelContract = web3.eth.contract(contractABI);
-                Sentinel = SentinelContract.at(contractAddress);
-
-                init();
-
-        } catch (error) {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'MetaMask Rejected'
-                });
-        }
-
-    } else if (window.web3) {
         web3.version.getNetwork((err, netId) => {
-            if(netId != 16110){
+            if(netId != 80001){
                 Swal.fire({
                     icon: 'error',
                     title: 'Wrong Network',
@@ -42,18 +17,31 @@ window.addEventListener('load', async () => {
                 });
             }
         });
-        window.web3 = new Web3(web3.currentProvider);
-        SentinelContract = new web3.eth.contract(contractABI);
-        Sentinel = SentinelContract.at(contractAddress);
 
-        init();
-    } else {
+
+        try {
+
+            window.web3 = new Web3(web3.currentProvider);
+            SentinelContract = new web3.eth.Contract(contractABI, contractAddress);
+            init();
+
+        } catch (error) {
+            console.log(error);
+            alert(error);
+        }
+
+    } else{
         Swal.fire({
-            icon: 'error',
-            title: 'MetaMask Rejected',
-            html: `Get a Web3 Compatible Browser like MetaMask or TrustWallet`
+            icon: 'info',
+            title: 'No Web3 Detected',
+            html: `We Recommend Getting a Web3 Compatible browser like MetaMask.`
         });
+
+        window.web3 = new Web3(new Web3.providers.HttpProvider('https://rpc-mumbai.matic.today'));
+        SentinelContract = new web3.eth.Contract(contractABI, contractAddress);
+        init();
     }
+
 });
 
 

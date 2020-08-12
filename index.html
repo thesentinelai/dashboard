@@ -271,7 +271,15 @@
     </div>
     <script src="js/lib/jquery-3.4.1.min.js"></script>
     <script src="js/lib/bootstrap.min.js"></script>
-    <script src="js/sentinel.js"></script>
+    <script>
+      var accordionItem = $('.accordion-item'),
+      accordionHead = $('.accordion-head');
+
+      accordionHead.on('click', function(){
+        accordionItem.removeClass('active');
+        $(this).parent().addClass('active');
+      });
+    </script>
     <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('serviceworker.js', {scope: '/'})
